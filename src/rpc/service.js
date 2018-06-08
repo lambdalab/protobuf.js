@@ -93,7 +93,9 @@ Service.prototype.rpcCall = function rpcCall(method, requestCtor, responseCtor, 
     try {
         return self.rpcImpl(
             method,
-            requestCtor[self.requestDelimited ? "encodeDelimited" : "encode"](request).finish(),
+            request,
+            requestCtor,
+            responseCtor,
             function rpcCallback(err, response) {
 
                 if (err) {

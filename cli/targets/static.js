@@ -586,13 +586,21 @@ function buildType(ref, type) {
 }
 
 function buildService(ref, service) {
-
+      
+        var typeDef = [
+            "@interface " + escapeName("I" + service.name)
+        ];
+         
+        push("");
+        pushComment(typeDef);
+     
     push("");
     pushComment([
         "Constructs a new " + service.name + " service.",
         service.parent instanceof protobuf.Root ? "@exports " + escapeName(service.name) : "@memberof " + exportName(service.parent),
         "@classdesc " + (service.comment || "Represents " + aOrAn(service.name)),
         "@extends $protobuf.rpc.Service",
+        "@implements " + escapeName("I" + service.name),
         "@constructor",
         "@param {$protobuf.RPCImpl} rpcImpl RPC implementation",
         "@param {boolean} [requestDelimited=false] Whether requests are length-delimited",
@@ -643,7 +651,7 @@ function buildService(ref, service) {
         pushComment([
             method.comment || "Calls " + method.name + ".",
             "@function " + lcName,
-            "@memberof " + exportName(service),
+            "@memberof I" + exportName(service),
             "@instance",
             "@param {" + exportName(method.resolvedRequestType, !config.forceMessage) + "} request " + method.resolvedRequestType.name + " message or plain object",
             "@param {" + exportName(service) + "." + cbName + "} callback Node-style callback called with the error, if any, and " + method.resolvedResponseType.name,
@@ -655,6 +663,9 @@ function buildService(ref, service) {
             push("return this.rpcCall(" + escapeName(lcName) + ", $root." + exportName(method.resolvedRequestType) + ", $root." + exportName(method.resolvedResponseType) + ", request, callback);");
             --indent;
         push("}, \"name\", { value: " + JSON.stringify(method.name) + " });");
+        
+        push(escapeName(service.name) + ".prototype" + util.safeProp(lcName) + ".options = "+ JSON.stringify(method.options) +";");
+
         if (config.comments)
             push("");
         pushComment([

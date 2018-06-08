@@ -1346,14 +1346,14 @@ export namespace rpc {
  * @param requestData Request data
  * @param callback Callback function
  */
-type RPCImpl = (method: (Method|rpc.ServiceMethod<Message<{}>, Message<{}>>), requestData: Uint8Array, callback: RPCImplCallback) => void;
+type RPCImpl = (method: (Method|rpc.ServiceMethod<Message<{}>, Message<{}>>), requestData: Message<{}>, requestCtor: Constructor<Message<{}>>, responseCtor: Constructor<Message<{}>>,callback: RPCImplCallback) => void;
 
 /**
  * Node-style callback as used by {@link RPCImpl}.
  * @param error Error, if any, otherwise `null`
  * @param [response] Response data or `null` to signal end of stream, if there hasn't been an error
  */
-type RPCImplCallback = (error: (Error|null), response?: (Uint8Array|null)) => void;
+type RPCImplCallback = (error: (Error|null), response?: (Message<{}> |null)) => void;
 
 /** Reflected service. */
 export class Service extends NamespaceBase {

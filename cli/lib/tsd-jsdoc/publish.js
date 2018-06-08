@@ -608,7 +608,7 @@ function handleMember(element, parent) {
 
         var inClass = isClassLike(parent);
         if (inClass) {
-            write(element.access || "public", " ");
+                write(element.access || "public", " ");
             if (element.scope === "static")
                 write("static ");
             if (element.readonly)
@@ -644,7 +644,9 @@ function handleFunction(element, parent, isConstructor) {
         begin(element);
         insideClass = isClassLike(parent);
         if (insideClass) {
-            write(element.access || "public", " ");
+            if(!isInterface(parent)) {
+                write(element.access || "public", " ");
+            }
             if (element.scope === "static")
                 write("static ");
         } else
